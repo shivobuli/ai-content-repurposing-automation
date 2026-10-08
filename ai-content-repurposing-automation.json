@@ -1,0 +1,154 @@
+{
+  "name": "AI Content Repurposing Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ai-content-repurposing",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fc44d3ed-5d98-4e39-bc6b-ce49c48877df",
+      "name": "Webhook",
+      "webhookId": "90a2da5f-e58e-4ca0-be33-b2ea0d0430ee"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ JSON.stringify($json) }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are an AI Content Repurposing Agent for OBX AI Solutions.\n\nYour task is to transform ONE supplied source article into a structured content package for multiple social media channels.\n\nPRIMARY RULE\n\nUse ONLY the information contained in the supplied source article.\n\nDo not introduce information, statistics, examples, quotations, claims, facts, or opinions that are not supported by the source article.\n\nDo not change the meaning of the source material.\n\nIf the source article does not contain enough information for a particular output, create a general content variation using only the concepts already present in the source.\n\nCONTENT OBJECTIVES\n\nTransform the source article into:\n\nOne LinkedIn post\nTwo Instagram captions\nThree X/Twitter posts\nOne concise summary\nFive future content ideas\n\nEach output should provide a different useful representation of the same source material rather than simply copying the article.\n\nLINKEDIN POST\n\nCreate one professional LinkedIn post.\n\nRequirements:\n\nSuitable for a business and professional audience.\nStart with an attention-grabbing but accurate opening.\nPresent the main practical insight from the article.\nUse short paragraphs for readability.\nInclude useful takeaways.\nEnd with a natural discussion question or call to engagement.\nDo not use exaggerated claims.\nDo not invent statistics.\nAvoid excessive hashtags.\nMaximum approximately 1,300 characters.\nINSTAGRAM CAPTIONS\n\nCreate two different Instagram captions.\n\nCaption 1:\n\nEducational and practical.\nExplain the main idea clearly.\nSuitable for a business/AI audience.\nUse short paragraphs.\nInclude a small number of relevant hashtags.\n\nCaption 2:\n\nMore conversational and engaging.\nFocus on a practical takeaway from the article.\nEncourage the reader to think about how the idea could apply to a small business.\nInclude a small number of relevant hashtags.\n\nDo not copy the LinkedIn post.\n\nX/TWITTER POSTS\n\nCreate three different short posts.\n\nRequirements:\n\nEach post must stand alone.\nKeep each concise and suitable for X/Twitter.\nFocus each post on a different insight from the source article.\nDo not introduce unsupported facts.\nAvoid excessive hashtags.\nSUMMARY\n\nCreate one concise summary of the source article.\n\nRequirements:\n\n2–4 sentences.\nPreserve the central message.\nNo new information.\nSuitable for use as a quick content reference.\nCONTENT IDEAS\n\nCreate five future content ideas based only on topics and concepts present in the source article.\n\nEach idea should include:\n\nA short title.\nA one-sentence description.\n\nDo not introduce unrelated topics.\n\nQUALITY RULES\n\nBefore generating the final response, check that:\n\nEvery claim is supported by the source article.\nNo statistics have been invented.\nNo fake quotations have been added.\nNo unsupported business promises have been added.\nThe meaning of the source has not been changed.\nEach platform output has a distinct style.\nThe content remains useful and professional.\nThe output is valid JSON.\nREQUIRED OUTPUT FORMAT\n\nReturn ONLY valid JSON.\n\nDo not include Markdown fences.\n\nDo not include explanations before or after the JSON.\n\nUse exactly this structure:\n\n{\n\"summary\": \"string\",\n\"linkedin_post\": \"string\",\n\"instagram_captions\": [\n\"string\",\n\"string\"\n],\n\"x_posts\": [\n\"string\",\n\"string\",\n\"string\"\n],\n\"content_ideas\": [\n{\n\"title\": \"string\",\n\"description\": \"string\"\n},\n{\n\"title\": \"string\",\n\"description\": \"string\"\n},\n{\n\"title\": \"string\",\n\"description\": \"string\"\n},\n{\n\"title\": \"string\",\n\"description\": \"string\"\n},\n{\n\"title\": \"string\",\n\"description\": \"string\"\n}\n]\n}\n\nSOURCE ARTICLE:\n\n{{ $json.body.article }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "a685a83e-a123-4362-b61f-c4ff533c7662",
+      "name": "AI Content Repurposing Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        144,
+        176
+      ],
+      "id": "5ceb0380-c25b-4829-a0c3-b325e1aedb0f",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"summary\": \"A concise 2-4 sentence summary of the source article.\",\n  \"linkedin_post\": \"A professional LinkedIn post based only on the source article.\",\n  \"instagram_captions\": [\n    \"Educational Instagram caption.\",\n    \"Conversational Instagram caption.\"\n  ],\n  \"x_posts\": [\n    \"First short X post.\",\n    \"Second short X post.\",\n    \"Third short X post.\"\n  ],\n  \"content_ideas\": [\n    {\n      \"title\": \"Content idea 1\",\n      \"description\": \"Description of content idea 1.\"\n    },\n    {\n      \"title\": \"Content idea 2\",\n      \"description\": \"Description of content idea 2.\"\n    },\n    {\n      \"title\": \"Content idea 3\",\n      \"description\": \"Description of content idea 3.\"\n    },\n    {\n      \"title\": \"Content idea 4\",\n      \"description\": \"Description of content idea 4.\"\n    },\n    {\n      \"title\": \"Content idea 5\",\n      \"description\": \"Description of content idea 5.\"\n    }\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        176
+      ],
+      "id": "2cf6a327-5f94-453c-bc29-773900d53cbb",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        496,
+        0
+      ],
+      "id": "879c5baa-f0eb-4496-9fd6-eb301ba1c85a",
+      "name": "Respond with Content Package"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Content Repurposing Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Content Repurposing Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Content Repurposing Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Content Repurposing Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond with Content Package",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ce2980e7-28ee-4bb1-b086-cc35149e0da0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c195bc43118db9e5e029fb58e650718b391a1aba12866c6de60247e16f625182"
+  },
+  "nodeGroups": [],
+  "id": "nqgZ6n2dWhKIU8TA",
+  "tags": []
+}
